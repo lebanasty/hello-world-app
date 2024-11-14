@@ -4,6 +4,7 @@
 
 replicaCount: 1
 
+# Pushed an nginx image w/ index.html to ECR
 image:
   repository: 665674997775.dkr.ecr.us-west-2.amazonaws.com/hello-world-app
   tag: latest
@@ -31,6 +32,8 @@ securityContext: {}
   # runAsNonRoot: true
   # runAsUser: 1000
 
+# Need to use port-forwarding to access the app
+# We can edit this to allow for external access if needed
 service:
   type: ClusterIP
   port: 80
