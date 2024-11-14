@@ -1,0 +1,52 @@
+# Terraform files
+*.tfstate
+*.tfstate.*
+.terraform/
+crash.log
+terraform.tfvars    # if sensitive data like API keys are in here
+terraform.tfvars.json
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+.terraform.lock.hcl
+
+# Kubernetes and Helm files
+*.kube/config   # local Kubernetes config (might contain sensitive info)
+*.log           # log files from kubectl or Helm
+*.yaml.release  # Helm release files, if any
+
+# Docker files
+*.env           # environment variables for Docker (if sensitive)
+.dockerignore
+docker-compose.override.yml
+**/Dockerfile   # If Dockerfiles are used only locally and don’t need to be shared
+
+# Node.js (if your project uses it for any part)
+node_modules/
+npm-debug.log
+yarn-error.log
+.pnp.*
+.pnp.js
+
+# Python (if used in the project)
+__pycache__/
+*.py[cod]
+*.pyo
+venv/
+env/
+
+# VSCode settings
+.vscode/
+.history
+
+# OS-generated files
+.DS_Store       # macOS
+Thumbs.db       # Windows
+
+# General sensitive data files
+*.key
+*.pem
+*.crt
+*.p12
+*.jks
