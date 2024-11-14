@@ -5,9 +5,9 @@
 replicaCount: 1
 
 image:
-  repository: nginx
-  tag: stable
-  pullPolicy: IfNotPresent
+  repository: 665674997775.dkr.ecr.us-west-2.amazonaws.com/hello-world-app
+  tag: latest
+  pullPolicy: Always # For development purposes
 
 imagePullSecrets: []
 nameOverride: ""
