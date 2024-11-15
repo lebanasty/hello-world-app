@@ -84,7 +84,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: kubeconfig
-        path: kubeconfig
+        path: terraform/kubeconfig
 
   helm:
     name: Helm Deployment
