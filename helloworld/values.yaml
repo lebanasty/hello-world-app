@@ -8,7 +8,7 @@ replicaCount: 1
 image:
   repository: 665674997775.dkr.ecr.us-west-2.amazonaws.com/hello-world-app
   tag: latest
-  pullPolicy: Always # For development purposes
+  pullPolicy: Always # For development
 
 imagePullSecrets: []
 nameOverride: ""
