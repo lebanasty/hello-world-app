@@ -22,7 +22,7 @@ No resources.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | Name of the k8s cluster | `string` | `"comet_cluster"` | no |
+| <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | Name of the k8s cluster | `string` | `"hw_cluster"` | no |
 | <a name="input_region"></a> [region](#input\_region) | AWS region we're deploying into | `string` | `"us-west-2"` | no |
 
 ## Outputs

@@ -8,7 +8,7 @@ module "eks" {
   version = "~> 20.0"
 
   cluster_name                             = var.cluster_name
-  cluster_version                          = "1.31" # Replace with latest
+  cluster_version                          = "1.31"
   cluster_endpoint_public_access           = true
   enable_cluster_creator_admin_permissions = true
 
@@ -35,7 +35,7 @@ module "eks" {
 
   tags = {
     Environment = "dev"
-    Project     = "comet_proj"
+    Project     = "hello-world"
   }
 }
 
@@ -43,7 +43,7 @@ module "eks" {
 module "vpc" {
   source = "terraform-aws-modules/vpc/aws"
 
-  name = "comet_proj"
+  name = "hello_world"
   cidr = "10.0.0.0/16"
 
   azs             = ["us-west-2a", "us-west-2b", "us-west-2c"]
