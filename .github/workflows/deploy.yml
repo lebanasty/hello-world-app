@@ -15,7 +15,7 @@ on:
 
 env:
   AWS_REGION: us-west-2
-  EKS_CLUSTER_NAME: hello-world-cluster
+  EKS_CLUSTER_NAME: hw_cluster
 
 jobs:
   detect-changes:
