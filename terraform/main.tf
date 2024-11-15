@@ -1,7 +1,3 @@
-provider "aws" {
-  region = var.region
-}
-
 # Use the EKS module to simplify cluster setup
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
@@ -58,4 +54,3 @@ module "vpc" {
     Environment = "dev"
   }
 }
-
