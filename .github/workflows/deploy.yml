@@ -166,7 +166,6 @@ jobs:
         if: ${{ needs.detect-changes.outputs.terraform_changed != 'true' }}
         run: |
           aws eks update-kubeconfig --name ${{ env.EKS_CLUSTER_NAME }} --region ${{ env.AWS_REGION }}
-          sed -i '/exec:/a\ \ \ \ interactiveMode: Never' ~/.kube/config
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
