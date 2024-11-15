@@ -18,14 +18,18 @@ output "eks_node_group_role_arn" {
 }
 
 data "aws_eks_cluster" "eks" {
+  depends_on = [module.eks]
   name = module.eks.cluster_name
 }
 
 data "aws_eks_cluster_auth" "eks" {
+  depends_on = [module.eks]
   name = module.eks.cluster_name
 }
 
 resource "local_file" "kubeconfig" {
+  depends_on = [data.aws_eks_cluster.eks, data.aws_eks_cluster_auth.eks]
+  
   content = templatefile("${path.module}/kubeconfig.tpl", {
     cluster_name = data.aws_eks_cluster.eks.name
     endpoint = data.aws_eks_cluster.eks.endpoint
