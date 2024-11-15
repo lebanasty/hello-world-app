@@ -161,7 +161,6 @@ jobs:
         run: |
           mkdir -p ~/.kube
           cp ./kubeconfig ~/.kube/config
-          sed -i '/exec:/a\ \ \ \ interactiveMode: Never' ~/.kube/config
 
       - name: Fetch kubeconfig from EKS
         if: ${{ needs.detect-changes.outputs.terraform_changed != 'true' }}
