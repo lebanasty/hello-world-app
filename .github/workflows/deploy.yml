@@ -33,16 +33,21 @@ jobs:
     - name: Check Terraform Directory Changes
       id: terraform_check
       run: |
-        git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q '^terraform/' && echo "true" || echo "false"
-      shell: bash
-      env:
-        changed: ${{ steps.terraform_check.outputs.changed }}
+        if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q '^terraform/'; then
+          echo "changed=true" >> $GITHUB_ENV
+          echo "::set-output name=changed::true"
+        else
+          echo "changed=false" >> $GITHUB_ENV
+          echo "::set-output name=changed::false"
+        fi
 
-    - name: Check Helm Directory Changes
-      id: helm_check
+    - name: Debug Outputs
       run: |
-        git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q '^helloworld/' && echo "true" || echo "false"
-      shell: bash
+        echo "Terraform Changed: ${{ steps.terraform_check.outputs.changed }}"
+      
+    - name: Log condition
+      run: |
+        echo "Condition: ${{ needs.detect-changes.outputs.terraform_changed }}"
 
   terraform:
     name: Terraform Provisioning
