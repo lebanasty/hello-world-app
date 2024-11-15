@@ -14,4 +14,13 @@ helm Job:
     Depends on both the detect-changes and terraform jobs (to ensure terraform completes if it was triggered).
     Includes a conditional if statement: if: ${{ needs.detect-changes.outputs.helm_changed == 'true' }}.
     Runs only when changes are detected in the helloworld/ directory.
-    
+
+Workflow Overview
+
+The workflow automates the following:
+
+    Detects changes in three key areas: terraform, helloworld (Helm charts), and hello-world-app (application code).
+    Runs jobs based on detected changes:
+        docker-build: Builds and pushes a Docker image to Amazon ECR if hello-world-app changes.
+        terraform: Applies Terraform changes if terraform files change.
+        helm: Deploys or updates the Helm release if Helm charts change or if the Terraform job succeeded.
