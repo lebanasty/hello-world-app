@@ -10,4 +10,3 @@ Configure paramaters in `values.yaml`, including.
 
 <!-- helm-docs:start -->
 <!-- helm-docs:end -->
-
