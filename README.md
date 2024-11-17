@@ -1,54 +1,105 @@
+
 # Hello World App Deployment with EKS
 
-This repository is designed to provision an EKS cluster in AWS and deploy a **hello-world-app** into it. 
-
+This repository is designed to provision an EKS cluster in AWS and deploy a **hello-world-app** into it.
 
 ## Table of Contents
 
+- [Introduction](#introduction)
 - [Prerequisites](#prerequisites)
-  - [Setting Up Secrets and Environment Variables](#setting-up-secrets-and-environment-variables)
-- [CI/CD Automation](#cicd-automation)
+  - [Tools to Install](#tools-to-install)
+  - [Setting Up AWS Account and Secrets](#setting-up-aws-account-and-secrets)
+- [Step-by-Step Deployment Guide](#step-by-step-deployment-guide)
+  - [Step 1: Clone the Repository](#step-1-clone-the-repository)
+  - [Step 2: Configure Secrets and Environment Variables](#step-2-configure-secrets-and-environment-variables)
+  - [Step 3: Trigger the CI/CD Pipeline](#step-3-trigger-the-cicd-pipeline)
 - [Accessing the Application](#accessing-the-application)
   - [Steps to Get the Application URL](#steps-to-get-the-application-url)
-    - [If Using a ClusterIP Service (Default Option)](#if-using-a-clusterip-service-default-option)
-    - [If Using a NodePort Service](#if-using-a-nodeport-service)
-    - [If Using a LoadBalancer Service](#if-using-a-loadbalancer-service)
-    - [If Ingress is Enabled](#if-ingress-is-enabled)
   - [Additional Notes](#additional-notes)
+
+---
+
+## Introduction
+
+This guide walks you through deploying the application from scratch.
 
 ---
 
 ## Prerequisites
 
-To successfully run the deployment, you must set the required environment variables. 
+Before deploying the application, ensure the following tools and accounts are set up:
 
-### Setting Up Secrets and Environment Variables
+### Tools to Install
 
-The easiest way to set these variables is by cloning the repository and configuring the secrets in the repository's settings. Ensure the following secrets are added:
+You need to install the following tools:
 
-- `AWS_ACCESS_KEY_ID`
-- `AWS_SECRET_ACCESS_KEY`
-- `AWS_ACCOUNT_ID`
+1. **Git**: To clone the repository. [Install Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
+2. **Terraform**: To provision the infrastructure. [Install Terraform](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli)
+3. **Helm**: To manage Kubernetes deployments. [Install Helm](https://helm.sh/docs/intro/install/)
 
-Additionally, set the following environment variable:
+### Setting Up AWS Account and Secrets
 
-- `AWS_REGION`
+- **AWS Account**: Create an AWS account if you don’t have one. [Sign Up for AWS](https://aws.amazon.com/)
+- **Access Credentials**: Generate an `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` in the AWS Management Console by creating a new IAM user with programmatic access. 
+- **IAM Permissions**: 
 
-## CI/CD Automation
+---
 
-This repository leverages **GitHub Actions** to automate the deployment process. The workflow is triggered when changes are detected in any of the following directories:
+## Step-by-Step Deployment Guide
 
-- `hello-world-app`
-- `helloworld`
-- `terraform`
+### Step 1: Clone the Repository
 
-Upon detecting changes, GitHub Actions will run the respective jobs to provision the infrastructure and deploy the application.
+1. Open a terminal or command prompt on your computer.
+2. Run the following command to clone this repository:
+   ```bash
+   git clone https://github.com/<username>/<repository-name>.git
+   ```
+3. Navigate to the cloned repository:
+   ```bash
+   cd <repository-name>
+   ```
+
+---
+
+### Step 2: Configure Secrets and Environment Variables
+
+1. Go to the repository’s **Settings** on GitHub.
+2. In the **Secrets and Variables** section, add the following secrets:
+   - `AWS_ACCESS_KEY_ID`
+   - `AWS_SECRET_ACCESS_KEY`
+   - `AWS_ACCOUNT_ID`
+3. Add the following environment variable:
+   - `AWS_REGION`: Set this to your desired AWS region (e.g., `us-west-2`).
+
+---
+
+### Step 3: Trigger the CI/CD Pipeline
+
+The CI/CD pipeline is automated using **GitHub Actions**. Here's how to start it:
+
+1. Make changes to any of the following directories to trigger the pipeline:
+   - `hello-world-app`
+   - `helloworld`
+   - `terraform`
+2. Push your changes to the GitHub repository:
+   ```bash
+   git add .
+   git commit -m "Trigger pipeline"
+   git push origin main
+   ```
+3. The pipeline will automatically:
+   - Provision an EKS cluster using Terraform.
+   - Deploy the `hello-world-app` using Helm.
+
+Monitor the pipeline’s progress in the **Actions** tab of your GitHub repository.
+
+---
 
 ## Accessing the Application
 
 Once the deployment is complete, you can access the application using one of the methods below, depending on the type of service configured in your deployment. 
 
-### Steps to Get the Application URL:
+### Steps to Get the Application URL
 
 1. **If Using a ClusterIP Service (Default Option):**
    - Use port-forwarding to access the application:
@@ -60,7 +111,6 @@ Once the deployment is complete, you can access the application using one of the
      ```
      http://127.0.0.1:8080
      ```
-     
 
 2. **If Using a NodePort Service:**
    - Run these commands to get the NodePort and IP address of the node:
@@ -90,9 +140,9 @@ Once the deployment is complete, you can access the application using one of the
    - Access the application at the URL provided by the ingress configuration.
 
 ### Additional Notes
+
 - Refer to the `NOTES.txt` file in the Helm chart for exact commands and further details specific to your configuration.
 - Replace `<namespace>`, `<service-name>`, `<app-name>`, and `<instance-name>` with the appropriate values for your deployment.
-
 
 ---
 
