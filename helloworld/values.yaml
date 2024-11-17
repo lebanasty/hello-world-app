@@ -2,29 +2,40 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
+# -- Number of replicas for the application
 replicaCount: 1
 
-# Pushed an nginx image w/ index.html to ECR
+# -- Docker image settings for the Hello, World! application pushed to ECR
 image:
+  # -- Docker image repository
   repository: 665674997775.dkr.ecr.us-west-2.amazonaws.com/hello-world-app
+  # -- Docker image tag (version)
   tag: latest
+  # -- Image pull policy: Always, IfNotPresent, or Never
   pullPolicy: Always # For development 
 
+# -- List of secrets for pulling private Docker images
 imagePullSecrets: []
+
+# -- Override the name of the release
 nameOverride: ""
+
+# -- Override the full name of the release
 fullnameOverride: ""
 
 serviceAccount:
-  # Specifies whether a service account should be created
+  # -- Specifies whether a service account should be created
   create: true
-  # The name of the service account to use.
-  # If not set and create is true, a name is generated using the fullname template
+  # -- The name of the service account to use.
+  # -- If not set and create is true, a name is generated using the fullname template
   name: ""
 
 podSecurityContext: {}
+  # -- Security context for the entire pod
   # fsGroup: 2000
 
 securityContext: {}
+  # -- Security context for the container
   # capabilities:
   #   drop:
   #   - ALL
@@ -32,31 +43,33 @@ securityContext: {}
   # runAsNonRoot: true
   # runAsUser: 1000
 
-# Need to use port-forwarding to access the app
-# We can edit this to allow for external access if needed
+# -- Kubernetes service configuration
 service:
+  # -- Type of Kubernetes service (ClusterIP, NodePort, LoadBalancer)
   type: ClusterIP
+  # -- Port that the service will expose
   port: 80
 
+# -- Ingress configuration for external access
 ingress:
+  # -- Enable or disable ingress
   enabled: false
+  # -- Annotations for the ingress controller
   annotations: {}
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
+  # -- List of hosts for the ingress
   hosts:
     - host: chart-example.local
       paths: []
-
+  # -- TLS configuration for the ingress
   tls: []
   #  - secretName: chart-example-tls
   #    hosts:
   #      - chart-example.local
 
+# -- Resource requests and limits for the container
 resources: {}
-  # We usually recommend not to specify default resources and to leave this as a conscious
-  # choice for the user. This also increases chances charts run on environments with little
-  # resources, such as Minikube. If you do want to specify resources, uncomment the following
-  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
   # limits:
   #   cpu: 100m
   #   memory: 128Mi
@@ -64,8 +77,11 @@ resources: {}
   #   cpu: 100m
   #   memory: 128Mi
 
+# -- Node selector configuration for scheduling pods
 nodeSelector: {}
 
+# -- Tolerations for scheduling pods on tainted nodes
 tolerations: []
 
+# -- Affinity rules for scheduling pods
 affinity: {}
