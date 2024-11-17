@@ -209,6 +209,17 @@ jobs:
             echo "kubeconfig not found!" && exit 1
           fi
 
+      - name: Package the Helm Chart
+        run: |
+          helm package ./helloworld
+          ls -l helloword-*.tgz
+
+      - name: Upload chart package as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: helloworld-chart
+          path: helloworld-*.tgz
+          
       - name: Helm Install
         run: |
           helm upgrade --install hello-world-release ./helloworld --wait
