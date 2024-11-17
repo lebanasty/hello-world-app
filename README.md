@@ -9,10 +9,12 @@ This repository is designed to provision an EKS cluster in AWS and deploy a **he
 - [Prerequisites](#prerequisites)
   - [Tools to Install](#tools-to-install)
   - [Setting Up AWS Account and Secrets](#setting-up-aws-account-and-secrets)
+  - [AWS IAM Permissions](#aws-iam-permissions)
 - [Step-by-Step Deployment Guide](#step-by-step-deployment-guide)
   - [Step 1: Clone the Repository](#step-1-clone-the-repository)
   - [Step 2: Configure Secrets and Environment Variables](#step-2-configure-secrets-and-environment-variables)
-  - [Step 3: Trigger the CI/CD Pipeline](#step-3-trigger-the-cicd-pipeline)
+  - [Step 3: Build and Push the Docker Image to Amazon ECR](#step-3-build-and-push-the-docker-image-to-amazon-ecr)
+  - [Step 4: Trigger the CI/CD Pipeline](#step-4-trigger-the-cicd-pipeline)
 - [Accessing the Application](#accessing-the-application)
   - [Steps to Get the Application URL](#steps-to-get-the-application-url)
   - [Additional Notes](#additional-notes)
@@ -21,13 +23,13 @@ This repository is designed to provision an EKS cluster in AWS and deploy a **he
 
 ## Introduction
 
-This guide walks you through deploying the application from scratch.
+This guide walks you through deploying the application from scratch with minimal technical expertise. 
 
 ---
 
 ## Prerequisites
 
-Before deploying the application, ensure the following tools and accounts are set up:
+Before deploying the application, ensure the following tools, permissions, and accounts are set up:
 
 ### Tools to Install
 
@@ -36,12 +38,29 @@ You need to install the following tools:
 1. **Git**: To clone the repository. [Install Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
 2. **Terraform**: To provision the infrastructure. [Install Terraform](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli)
 3. **Helm**: To manage Kubernetes deployments. [Install Helm](https://helm.sh/docs/intro/install/)
+4. **Docker**: To build and push Docker images. [Install Docker](https://docs.docker.com/get-docker/)
+5. **AWS CLI**: To interact with AWS services. [Install AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html)
 
 ### Setting Up AWS Account and Secrets
 
 - **AWS Account**: Create an AWS account if you don’t have one. [Sign Up for AWS](https://aws.amazon.com/)
-- **Access Credentials**: Generate an `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` in the AWS Management Console by creating a new IAM user with programmatic access. 
-- **IAM Permissions**: 
+- **Access Credentials**: Generate an `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` in the AWS Management Console by creating a new IAM user with programmatic access.
+
+### AWS IAM Permissions
+
+Ensure your IAM user or role has permissions for the following services:
+
+- `ec2`
+- `autoscaling`
+- `eks`
+- `iam`
+- `elasticloadbalancing`
+- `s3`
+- `ecr`
+- `kms`
+- `logs`
+- `cloudwatch`
+- `route53`
 
 ---
 
@@ -73,7 +92,34 @@ You need to install the following tools:
 
 ---
 
-### Step 3: Trigger the CI/CD Pipeline
+### Step 3: Build and Push the Docker Image to Amazon ECR
+
+1. **Authenticate Docker to Amazon ECR**:
+   ```bash
+   aws ecr get-login-password --region <AWS_REGION> | docker login --username AWS --password-stdin <AWS_ACCOUNT_ID>.dkr.ecr.<AWS_REGION>.amazonaws.com
+   ```
+
+2. **Build the Docker image**:
+   Navigate to the `hello-world-app` directory and build the Docker image:
+   ```bash
+   docker build -t hello-world-app .
+   ```
+
+3. **Tag the Docker image**:
+   Tag the image with the ECR repository URL:
+   ```bash
+   docker tag hello-world-app:latest <AWS_ACCOUNT_ID>.dkr.ecr.<AWS_REGION>.amazonaws.com/hello-world-app:latest
+   ```
+
+4. **Push the Docker image to ECR**:
+   Push the image to your ECR repository:
+   ```bash
+   docker push <AWS_ACCOUNT_ID>.dkr.ecr.<AWS_REGION>.amazonaws.com/hello-world-app:latest
+   ```
+
+---
+
+### Step 4: Trigger the CI/CD Pipeline
 
 The CI/CD pipeline is automated using **GitHub Actions**. Here's how to start it:
 
