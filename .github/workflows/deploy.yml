@@ -127,8 +127,20 @@ jobs:
         run: terraform init
         working-directory: terraform
 
-      - name: Apply Terraform
-        run: terraform apply -auto-approve
+      - name: Generate Terraform Plan
+        id: tf_plan
+        run: terraform plan -out=tfplan.binary
+        working-directory: terraform
+
+      - name: Upload Terraform Plan as Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: terraform-plan
+          path: terraform/tfplan.binary
+
+      - name: Apply Terraform Plan
+        if: ${{ github.event_name == 'push' }}
+        run: terraform apply -auto-approve tfplan.binary
         working-directory: terraform
 
       - name: Output kubeconfig
@@ -139,6 +151,7 @@ jobs:
 
       - name: Signal Terraform Completion
         run: echo "terraform_completed=true" > terraform-status.txt
+
       - name: Upload Terraform Status
         uses: actions/upload-artifact@v3
         with:
@@ -212,7 +225,7 @@ jobs:
       - name: Package the Helm Chart
         run: |
           helm package ./helloworld
-          ls -l helloword-*.tgz
+          ls -l helloworld-*.tgz
 
       - name: Upload chart package as artifact
         uses: actions/upload-artifact@v3
