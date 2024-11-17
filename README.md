@@ -80,7 +80,41 @@ Ensure your IAM user or role has permissions for the following services:
 
 ---
 
-### Step 2: Configure Secrets and Environment Variables
+### Step 2: Create the Amazon ECR Repository
+
+Create a repository in Amazon Elastic Container Registry (ECR) to store the Docker image:
+
+1. Run the following command to create the repository:
+   ```bash
+   aws ecr create-repository --repository-name hello-world-app --region <AWS_REGION>
+   ```
+   Replace `<AWS_REGION>` with your desired AWS region (e.g., `us-west-2`).
+
+---
+
+### Step 3: Create the S3 Bucket for Terraform State
+
+Terraform requires a backend (like S3) to store its state file. Create an S3 bucket for this purpose:
+
+1. **Create the bucket**:
+   ```bash
+   aws s3api create-bucket --bucket <your-unique-bucket-name> --region <AWS_REGION> --create-bucket-configuration LocationConstraint=<AWS_REGION>
+   ```
+   Replace `<your-unique-bucket-name>` with a globally unique name for your bucket and `<AWS_REGION>` with your desired AWS region.
+
+2. **Enable versioning**:
+   ```bash
+   aws s3api put-bucket-versioning --bucket <your-unique-bucket-name> --versioning-configuration Status=Enabled
+   ```
+
+3. **Set up encryption** (optional):
+   ```bash
+   aws s3api put-bucket-encryption --bucket <your-unique-bucket-name> --server-side-encryption-configuration '{"Rules":[{"ApplyServerSideEncryptionByDefault":{"SSEAlgorithm":"AES256"}}]}'
+   ```
+
+---
+
+### Step 4: Configure Secrets and Environment Variables
 
 1. Go to the repository’s **Settings** on GitHub.
 2. In the **Secrets and Variables** section, add the following secrets:
@@ -92,7 +126,7 @@ Ensure your IAM user or role has permissions for the following services:
 
 ---
 
-### Step 3: Build and Push the Docker Image to Amazon ECR
+### Step 5: Build and Push the Docker Image to Amazon ECR
 
 1. **Authenticate Docker to Amazon ECR**:
    ```bash
@@ -119,7 +153,7 @@ Ensure your IAM user or role has permissions for the following services:
 
 ---
 
-### Step 4: Trigger the CI/CD Pipeline
+### Step 6: Trigger the CI/CD Pipeline
 
 The CI/CD pipeline is automated using **GitHub Actions**. Here's how to start it:
 
@@ -138,6 +172,7 @@ The CI/CD pipeline is automated using **GitHub Actions**. Here's how to start it
    - Deploy the `hello-world-app` using Helm.
 
 Monitor the pipeline’s progress in the **Actions** tab of your GitHub repository.
+
 
 ---
 
